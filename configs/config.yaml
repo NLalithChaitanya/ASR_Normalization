@@ -1,0 +1,94 @@
+
+project:
+  name: "asr-normalization-project"
+  description: "Diagnosing ASR Failure Patterns and Normalization Effects in Indian Languages"
+  random_seed: 42
+
+paths:
+  data_dir: "data"
+  manifest: "data/manifest.parquet"
+  audio_dir: "data/audio"
+  predictions_dir: "artifacts/predictions"
+  metrics_dir: "artifacts/metrics"
+  figures_dir: "artifacts/figures"
+  logs_dir: "artifacts/logs"
+
+dataset:
+  name: "Kathbath"
+  languages:
+    - "hi"
+    - "ta"
+    - "te"
+  conditions:
+    - "clean"
+    - "noisy"
+  language_names:
+    hi: "Hindi"
+    ta: "Tamil"
+    te: "Telugu"
+  expected_utterances_per_language_condition: 500
+  audio:
+    target_sample_rate: 16000
+    mono: true
+  noise:
+    enabled: true
+    nominal_snr_db: 10
+
+models:
+  whisper:
+    name: "openai/whisper-small"
+    enabled: true
+    batch_size: 8
+    task: "transcribe"
+
+  indicconformer_ctc:
+    name: "ai4bharat/indicconformer_stt"
+    enabled: true
+    batch_size: 8
+    decoding: "ctc"
+
+  indicconformer_rnnt:
+    name: "ai4bharat/indicconformer_stt"
+    enabled: true
+    batch_size: 8
+    decoding: "rnnt"
+
+inference:
+  device: "auto"
+  num_workers: 2
+  overwrite_predictions: false
+  save_intermediate_results: true
+
+evaluation:
+  metrics:
+    - "wer"
+    - "cer"
+  normalizers:
+    - "raw"
+    - "minimal"
+    - "whisper_style"
+  primary_normalizer: "minimal"
+  compute_substitutions: true
+  compute_deletions: true
+  compute_insertions: true
+  bootstrap:
+    enabled: false
+    confidence_level: 0.95
+    num_samples: 1000
+
+analysis:
+  run_error_taxonomy: true
+  run_normalization_audit: true
+  run_telugu_whisper_audit: true
+  run_number_error_analysis: true
+  run_code_mixed_analysis: true
+
+visualization:
+  format: "png"
+  dpi: 300
+  style: "whitegrid"
+  save_figures: true
+
+logging:
+  level: "INFO"
+  filename: "artifacts/logs/project.log"
