@@ -15,13 +15,9 @@
 
 ## 👥 Team
 
-| Name | Roll No. 
-|---|---|---|---|
 | Lalith Chaitanya  | 2023BCD0033 
 | Manoj | 2023BCD0029 
 | Sai Nihal | 2023BCD0045 
-
-**Supervisor:** Prof. Name, Department of Computer Science and Engineering, IIIT Kottayam
 
 ## 📌 At a Glance
 
